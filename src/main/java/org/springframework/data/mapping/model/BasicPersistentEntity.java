@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -58,7 +59,7 @@ import org.springframework.util.StringUtils;
  */
 public class BasicPersistentEntity<T, P extends PersistentProperty<P>> implements MutablePersistentEntity<T, P> {
 
-	private final PreferredConstructor<T, P> constructor;
+	private final Optional<PreferredConstructor<T, P>> constructor;
 	private final TypeInformation<T> information;
 	private final List<P> properties;
 	private final Comparator<P> comparator;
@@ -108,7 +109,7 @@ public class BasicPersistentEntity<T, P extends PersistentProperty<P>> implement
 	 * (non-Javadoc)
 	 * @see org.springframework.data.mapping.PersistentEntity#getPersistenceConstructor()
 	 */
-	public PreferredConstructor<T, P> getPersistenceConstructor() {
+	public Optional<PreferredConstructor<T, P>> getPersistenceConstructor() {
 		return constructor;
 	}
 
@@ -117,7 +118,7 @@ public class BasicPersistentEntity<T, P extends PersistentProperty<P>> implement
 	 * @see org.springframework.data.mapping.PersistentEntity#isConstructorArgument(org.springframework.data.mapping.PersistentProperty)
 	 */
 	public boolean isConstructorArgument(PersistentProperty<?> property) {
-		return constructor == null ? false : constructor.isConstructorParameter(property);
+		return constructor.map(it -> it.isConstructorParameter(property)).orElse(false);
 	}
 
 	/*
