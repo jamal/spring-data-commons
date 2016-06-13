@@ -15,9 +15,8 @@
  */
 package org.springframework.data.domain;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 import static org.springframework.data.domain.ExampleMatcher.*;
 
 import org.junit.Before;
@@ -45,7 +44,7 @@ public class ExampleMatcherUnitTests {
 	 */
 	@Test
 	public void defaultStringMatcherShouldReturnDefault() throws Exception {
-		assertThat(matcher.getDefaultStringMatcher(), is(StringMatcher.DEFAULT));
+		assertThat(matcher.getDefaultStringMatcher()).isEqualTo(StringMatcher.DEFAULT);
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class ExampleMatcherUnitTests {
 	 */
 	@Test
 	public void ignoreCaseShouldReturnFalseByDefault() throws Exception {
-		assertThat(matcher.isIgnoreCaseEnabled(), is(false));
+		assertThat(matcher.isIgnoreCaseEnabled()).isFalse();
 	}
 
 	/**
@@ -61,7 +60,7 @@ public class ExampleMatcherUnitTests {
 	 */
 	@Test
 	public void ignoredPathsIsEmptyByDefault() throws Exception {
-		assertThat(matcher.getIgnoredPaths(), is(empty()));
+		assertThat(matcher.getIgnoredPaths()).isEmpty();
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class ExampleMatcherUnitTests {
 	 */
 	@Test
 	public void nullHandlerShouldReturnIgnoreByDefault() throws Exception {
-		assertThat(matcher.getNullHandler(), is(NullHandler.IGNORE));
+		assertThat(matcher.getNullHandler()).isEqualTo(NullHandler.IGNORE);
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIgnoreCase();
 
-		assertThat(matcher.isIgnoreCaseEnabled(), is(true));
+		assertThat(matcher.isIgnoreCaseEnabled()).isTrue();
 	}
 
 	/**
@@ -99,7 +98,7 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIgnoreCase(true);
 
-		assertThat(matcher.isIgnoreCaseEnabled(), is(true));
+		assertThat(matcher.isIgnoreCaseEnabled()).isTrue();
 	}
 
 	/**
@@ -110,7 +109,7 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIncludeNullValues();
 
-		assertThat(matcher.getNullHandler(), is(NullHandler.INCLUDE));
+		assertThat(matcher.getNullHandler()).isEqualTo(NullHandler.INCLUDE);
 	}
 
 	/**
@@ -121,7 +120,7 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIgnoreNullValues();
 
-		assertThat(matcher.getNullHandler(), is(NullHandler.IGNORE));
+		assertThat(matcher.getNullHandler()).isEqualTo(NullHandler.IGNORE);
 	}
 
 	/**
@@ -132,7 +131,7 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withNullHandler(NullHandler.INCLUDE);
 
-		assertThat(matcher.getNullHandler(), is(NullHandler.INCLUDE));
+		assertThat(matcher.getNullHandler()).isEqualTo(NullHandler.INCLUDE);
 	}
 
 	/**
@@ -143,8 +142,8 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIgnorePaths("foo", "bar", "baz");
 
-		assertThat(matcher.getIgnoredPaths(), contains("foo", "bar", "baz"));
-		assertThat(matcher.getIgnoredPaths(), hasSize(3));
+		assertThat(matcher.getIgnoredPaths()).contains("foo", "bar", "baz");
+		assertThat(matcher.getIgnoredPaths()).hasSize(3);
 	}
 
 	/**
@@ -155,8 +154,8 @@ public class ExampleMatcherUnitTests {
 
 		matcher = matching().withIgnorePaths("foo", "bar", "foo");
 
-		assertThat(matcher.getIgnoredPaths(), contains("foo", "bar"));
-		assertThat(matcher.getIgnoredPaths(), hasSize(2));
+		assertThat(matcher.getIgnoredPaths()).contains("foo", "bar");
+		assertThat(matcher.getIgnoredPaths()).hasSize(2);
 	}
 
 	/**
@@ -168,12 +167,12 @@ public class ExampleMatcherUnitTests {
 		matcher = matching().withIgnorePaths("foo", "bar", "foo");
 		ExampleMatcher configuredExampleSpec = matcher.withIgnoreCase();
 
-		assertThat(matcher, is(not(sameInstance(configuredExampleSpec))));
-		assertThat(matcher.getIgnoredPaths(), hasSize(2));
-		assertThat(matcher.isIgnoreCaseEnabled(), is(false));
+		assertThat(matcher).isNotEqualTo(sameInstance(configuredExampleSpec));
+		assertThat(matcher.getIgnoredPaths()).hasSize(2);
+		assertThat(matcher.isIgnoreCaseEnabled()).isFalse();
 
-		assertThat(configuredExampleSpec.getIgnoredPaths(), hasSize(2));
-		assertThat(configuredExampleSpec.isIgnoreCaseEnabled(), is(true));
+		assertThat(configuredExampleSpec.getIgnoredPaths()).hasSize(2);
+		assertThat(configuredExampleSpec.isIgnoreCaseEnabled()).isTrue();
 	}
 
 	static class Person {
