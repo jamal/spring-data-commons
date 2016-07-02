@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.data.domain.Continuable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.util.QueryExecutionConverters;
@@ -78,6 +79,19 @@ public class ParametersParameterAccessor implements ParameterAccessor {
 		}
 
 		return (Pageable) values.get(parameters.getPageableIndex());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.query.ParameterAccessor#getContinuable()
+	 */
+	public Continuable getContinuable() {
+
+		if (!parameters.hasContinuableParameter()) {
+			return null;
+		}
+
+		return (Continuable) values.get(parameters.getContinuableIndex());
 	}
 
 	/*

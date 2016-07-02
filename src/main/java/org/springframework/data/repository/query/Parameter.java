@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
+import org.springframework.data.domain.Continuable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.util.QueryExecutionConverters;
@@ -166,6 +167,15 @@ public class Parameter {
 	 */
 	boolean isPageable() {
 		return Pageable.class.isAssignableFrom(getType());
+	}
+
+	/**
+	 * Returns whether the {@link Parameter} is a {@link Continuable} parameter.
+	 *
+	 * @return
+	 */
+	boolean isContinuable() {
+		return Continuable.class.isAssignableFrom(getType());
 	}
 
 	/**

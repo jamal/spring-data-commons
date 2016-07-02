@@ -20,10 +20,7 @@ import static org.springframework.data.repository.util.ClassUtils.*;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.EntityMetadata;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -173,7 +170,7 @@ public class QueryMethod {
 	 */
 	public boolean isCollectionQuery() {
 
-		return !(isPageQuery() || isSliceQuery())
+		return !(isPageQuery() || isContinuationQuery() || isSliceQuery())
 				&& org.springframework.util.ClassUtils.isAssignable(Iterable.class, unwrappedReturnType)
 				|| unwrappedReturnType.isArray();
 	}
@@ -185,7 +182,8 @@ public class QueryMethod {
 	 * @since 1.8
 	 */
 	public boolean isSliceQuery() {
-		return !isPageQuery() && org.springframework.util.ClassUtils.isAssignable(Slice.class, unwrappedReturnType);
+		return !isPageQuery() && !isContinuationQuery()
+				&& org.springframework.util.ClassUtils.isAssignable(Slice.class, unwrappedReturnType);
 	}
 
 	/**
@@ -195,6 +193,15 @@ public class QueryMethod {
 	 */
 	public final boolean isPageQuery() {
 		return org.springframework.util.ClassUtils.isAssignable(Page.class, unwrappedReturnType);
+	}
+
+	/**
+	 * Returns whether the finder will return a {@link Continuation}.
+	 *
+	 * @return
+   */
+	public final boolean isContinuationQuery() {
+		return org.springframework.util.ClassUtils.isAssignable(Continuation.class, unwrappedReturnType);
 	}
 
 	/**

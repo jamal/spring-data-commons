@@ -26,6 +26,7 @@ import java.util.List;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.data.domain.Continuable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
@@ -48,6 +49,7 @@ public abstract class Parameters<S extends Parameters<S, T>, T extends Parameter
 
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 	private final int pageableIndex;
+	private final int continuableIndex;
 	private final int sortIndex;
 	private final List<T> parameters;
 
@@ -86,6 +88,7 @@ public abstract class Parameters<S extends Parameters<S, T>, T extends Parameter
 		}
 
 		this.pageableIndex = types.indexOf(Pageable.class);
+		this.continuableIndex = types.indexOf(Continuable.class);
 		this.sortIndex = types.indexOf(Sort.class);
 
 		assertEitherAllParamAnnotatedOrNone();
@@ -101,6 +104,7 @@ public abstract class Parameters<S extends Parameters<S, T>, T extends Parameter
 		this.parameters = new ArrayList<T>();
 
 		int pageableIndexTemp = -1;
+		int continuableIndexTemp = -1;
 		int sortIndexTemp = -1;
 		int dynamicProjectionTemp = -1;
 
@@ -110,11 +114,13 @@ public abstract class Parameters<S extends Parameters<S, T>, T extends Parameter
 			this.parameters.add(original);
 
 			pageableIndexTemp = original.isPageable() ? i : -1;
+			continuableIndexTemp = original.isContinuable() ? i : -1;
 			sortIndexTemp = original.isSort() ? i : -1;
 			dynamicProjectionTemp = original.isDynamicProjectionParameter() ? i : -1;
 		}
 
 		this.pageableIndex = pageableIndexTemp;
+		this.continuableIndex = continuableIndexTemp;
 		this.sortIndex = sortIndexTemp;
 		this.dynamicProjectionIndex = dynamicProjectionTemp;
 	}
@@ -144,6 +150,25 @@ public abstract class Parameters<S extends Parameters<S, T>, T extends Parameter
 	 */
 	public int getPageableIndex() {
 		return pageableIndex;
+	}
+
+	/**
+	 * Returns whether the method the {@link Parameters} was created for contains a {@link Continuable} argument.
+	 *
+	 * @return
+	 */
+	public boolean hasContinuableParameter() {
+		return continuableIndex != -1;
+	}
+
+	/**
+	 * Returns the index of the {@link Continuable} {@link Method} parameter if available. Will return {@literal -1} if there
+	 * is no {@link Continuable} argument in the {@link Method}'s parameter list.
+	 *
+	 * @return the continuableIndex
+	 */
+	public int getContinuableIndex() {
+		return continuableIndex;
 	}
 
 	/**

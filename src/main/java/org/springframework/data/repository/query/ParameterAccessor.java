@@ -17,6 +17,7 @@ package org.springframework.data.repository.query;
 
 import java.util.Iterator;
 
+import org.springframework.data.domain.Continuable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -33,6 +34,13 @@ public interface ParameterAccessor extends Iterable<Object> {
 	 * @return
 	 */
 	Pageable getPageable();
+
+	/**
+	 * Returns the {@link Continuable} of the parameters, if available. Returns {@code null} otherwise.
+	 *
+	 * @return
+	 */
+	Continuable getContinuable();
 
 	/**
 	 * Returns the sort instance to be used for query creation. Will use a {@link Sort} parameter if available or the
